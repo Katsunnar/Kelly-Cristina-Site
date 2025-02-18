@@ -1,154 +1,72 @@
-window.onbeforeunload = function() {
-  if (window.location.pathname !== "/index.html") {
-    window.location.href = "/index.html";
-  }
-}
-
-window.onload = function() {
-  if (window.location.pathname !== "/index.html" && window.performance.navigation.type === 1) {
-    window.location.href = "/index.html";
-  }
-}
-
-
 document.addEventListener('DOMContentLoaded', function () {
   const container = document.querySelector('.testimonial-card-container');
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
-  let startX, scrollLeft, isDown = false;
+  let startX = 0; // Inicializa startX
+  let startY = 0; // Inicializa startY
+  let isDown = false;
 
-  // Função de arraste com o mouse
-  container.addEventListener('mousedown', (e) => {
-    isDown = true;
-    startX = e.pageX - container.offsetLeft;
-    scrollLeft = container.scrollLeft;
-  });
-
-  container.addEventListener('mouseleave', () => {
-    isDown = false;
-  });
-
-  container.addEventListener('mouseup', (e) => {
-    isDown = false;
-
-    // Detectar o movimento de arraste (clicando e arrastando)
-    let currentX = e.pageX;
-    if (currentX < startX) {
-      // Movendo para a esquerda, chama a função next-btn
-      nextBtn.click();
-    } else if (currentX > startX) {
-      // Movendo para a direita, chama a função prev-btn
-      prevBtn.click();
-    }
-  });
-
-  container.addEventListener('mousemove', (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - container.offsetLeft;
-    const walk = (x - startX) * 3; // A velocidade do deslize
-    container.scrollLeft = scrollLeft - walk;
-  });
-
-  // Função de arraste com toque (para dispositivos móveis)
+  // Função de arraste com o toque (para dispositivos móveis)
   container.addEventListener('touchstart', (e) => {
-    isDown = true;
-    startX = e.touches[0].pageX - container.offsetLeft;
-    scrollLeft = container.scrollLeft;
+      isDown = true;
+      startX = e.touches[0].clientX; // Use clientX para obter a posição relativa à janela
+      startY = e.touches[0].clientY;
   });
 
   container.addEventListener('touchend', () => {
-    isDown = false;
+      isDown = false;
   });
 
   container.addEventListener('touchmove', (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.touches[0].pageX - container.offsetLeft;
-    const walk = (x - startX) * 3; // A velocidade do deslize
-    container.scrollLeft = scrollLeft - walk;
+      if (!isDown) return;
+      e.preventDefault(); // Impede o comportamento padrão (como o scroll)
+
+      const endX = e.touches[0].clientX; // Use clientX
+      const endY = e.touches[0].clientY;
+
+      const deltaX = endX - startX;
+      const deltaY = endY - startY;
+
+      // Verifica se o movimento foi predominantemente horizontal (esquerda/direita)
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+          if (deltaX > 50) { // Ajuste o valor para a sensibilidade do swipe (ex: 50 pixels)
+              // Movendo para a direita, chama a função prev-btn (anterior)
+              prevBtn.click();
+          } else if (deltaX < -50) { // Ajuste o valor para a sensibilidade do swipe (ex: -50 pixels)
+              // Movendo para a esquerda, chama a função next-btn (próximo)
+              nextBtn.click();
+          }
+      }
+      startX = endX; // Atualiza o startX para o próximo movimento
+      startY = endY; // Atualiza o startY para o próximo movimento
   });
 
-  // Detectar o movimento e chamar as funções next ou prev
-  let lastX = 0; // Posição anterior para detectar a direção
+  // Selecionando os botões de navegação
+  const cards = document.querySelectorAll(".testimonial-card");
+  let currentIndex = 0;
 
-  container.addEventListener('mousedown', (e) => {
-    lastX = e.pageX;
-  });
+  // Função para mostrar o card anterior
+  function showPrevCard() {
+      if (currentIndex > 0) {
+          cards[currentIndex].classList.remove("active");
+          currentIndex--;
+          cards[currentIndex].classList.add("active");
+      }
+  }
 
-  container.addEventListener('mouseup', (e) => {
-    if (!isDown) return;
-    let currentX = e.pageX;
-    if (currentX < lastX) {
-      // Movendo para a esquerda, chama a função next-btn
-      nextBtn.click();
-    } else if (currentX > lastX) {
-      // Movendo para a direita, chama a função prev-btn
-      prevBtn.click();
-    }
-  });
+  // Função para mostrar o próximo card
+  function showNextCard() {
+      if (currentIndex < cards.length - 1) {
+          cards[currentIndex].classList.remove("active");
+          currentIndex++;
+          cards[currentIndex].classList.add("active");
+      }
+  }
 
-  container.addEventListener('touchstart', (e) => {
-    lastX = e.touches[0].pageX;
-  });
+  // Inicializa o primeiro card como ativo
+  cards[currentIndex].classList.add("active");
 
-  container.addEventListener('touchend', (e) => {
-    if (!isDown) return;
-    let currentX = e.changedTouches[0].pageX;
-    if (currentX < lastX) {
-      // Movendo para a esquerda, chama a função next-btn
-      nextBtn.click();
-    } else if (currentX > lastX) {
-      // Movendo para a direita, chama a função prev-btn
-      prevBtn.click();
-    }
-  });
-
-  // Função para detectar clique diretamente no card
-  container.addEventListener('click', (e) => {
-    const rect = container.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const cardWidth = container.offsetWidth / container.children.length;
-
-    if (clickX < cardWidth / 2) {
-      // Clique no lado esquerdo do container, vai para o card anterior
-      prevBtn.click();
-    } else {
-      // Clique no lado direito do container, vai para o próximo card
-      nextBtn.click();
-    }
-  });
+  // Ações dos botões de navegação
+  prevBtn.addEventListener("click", showPrevCard);
+  nextBtn.addEventListener("click", showNextCard);
 });
-
-
-
-// Selecionando os botões de navegação
-const prevBtn = document.getElementById("prev-btn");
-const nextBtn = document.getElementById("next-btn");
-const cards = document.querySelectorAll(".testimonial-card");
-let currentIndex = 0;
-
-// Função para mostrar o card anterior
-function showPrevCard() {
-    if (currentIndex > 0) {
-        cards[currentIndex].classList.remove("active");
-        currentIndex--;
-        cards[currentIndex].classList.add("active");
-    }
-}
-
-// Função para mostrar o próximo card
-function showNextCard() {
-    if (currentIndex < cards.length - 1) {
-        cards[currentIndex].classList.remove("active");
-        currentIndex++;
-        cards[currentIndex].classList.add("active");
-    }
-}
-
-// Inicializa o primeiro card como ativo
-cards[currentIndex].classList.add("active");
-
-// Ações dos botões de navegação
-prevBtn.addEventListener("click", showPrevCard);
-nextBtn.addEventListener("click", showNextCard);

@@ -11866,7 +11866,8 @@ html {
   .profile .profile-img {
     height: 65vw;
   }
-}
+
+  
 @media (min-width: 768px) {
   .btn-sm {
     font-size: 12px;
