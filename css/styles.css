@@ -11819,33 +11819,49 @@ html {
   transform: translateX(-50%);
 }
 
-/* Responsividade para telas pequenas (mobile) */
+
 @media (max-width: 576px) {
-  /* Esconde as setas de navegação */
   #prev-btn,
   #next-btn {
-    display: none; /* Esconde as setas em dispositivos móveis */
+    display: none; 
   }
 
+  .hover-card {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .hover-card.hover {
+    transform: scale(1.05);
+  }
+
+  .produto-card {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .produto-card.hover {
+    transform: scale(1.05);
+  }
+
+
   .testimonial-card-container {
-    overflow: hidden; /* Esconde qualquer conteúdo extra se houver, mas não afeta o card */
-    touch-action: pan-y; /* Permite que o usuário deslize para a esquerda/direita */
+    overflow: hidden; 
+    touch-action: pan-y;
     display: flex;
-    flex-wrap: nowrap; /* Impede que os cards quebrem em linha */
+    flex-wrap: nowrap; 
     justify-content: flex-start;
   }
 
   .testimonial-card {
-    flex-shrink: 0; /* Impede que o card encolha */
-    width: 100%; /* O card ocupa toda a largura do container */
+    flex-shrink: 0; 
+    width: 100%; 
     max-width: 100%;
     padding: 30px;
-    margin-right: 15px; /* Distância entre os cards */
+    margin-right: 15px; 
     box-sizing: border-box;
   }
 
   .profile-image-container {
-    width: 100px; /* Tamanho da imagem */
+    width: 100px;
     height: 100px;
   }
 
@@ -11869,6 +11885,22 @@ html {
 
   
 @media (min-width: 768px) {
+  .hover-card {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .hover-card.hover {
+    transform: scale(1.05);
+  }
+  
+  .produto-card {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .produto-card.hover {
+    transform: scale(1.05);
+  }
+
   .btn-sm {
     font-size: 12px;
     padding: 6px 12px;
@@ -11883,6 +11915,22 @@ html {
 }
 
 @media (min-width: 992px) {
+  .hover-card {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .hover-card.hover {
+    transform: scale(1.05);
+  }
+
+  .produto-card {
+    transition: transform 0.3s ease-in-out;
+  }
+
+
+  .produto-card.hover {
+    transform: scale(1.05);
+  }
   .btn-sm {
     font-size: 14px;
     padding: 6px 12px;

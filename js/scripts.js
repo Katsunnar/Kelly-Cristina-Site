@@ -1,72 +1,47 @@
 window.onbeforeunload = function() {
   if (window.location.pathname !== "/index.html") {
     window.location.href = "/index.html";
-  }
+  } 
 }
 
-window.onload = function() {
+window.onload = function () {
   if (window.location.pathname !== "/index.html" && window.performance.navigation.type === 1) {
     window.location.href = "/index.html";
   }
 }
 
-// Selecionando os botões de navegação
-const prevBtn = document.getElementById("prev-btn");
-const nextBtn = document.getElementById("next-btn");
-const cards = document.querySelectorAll(".testimonial-card");
-let currentIndex = 0;
+const cards = document.querySelectorAll('.hover-card, .produto-card');
 
-// Função para mostrar o card anterior
-function showPrevCard() {
-    if (currentIndex > 0) {
-        cards[currentIndex].classList.remove("active");
-        currentIndex--;
-        cards[currentIndex].classList.add("active");
+function checkCenter() {
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+
+  let closestCard = null;
+  let closestDistance = Infinity;
+
+  cards.forEach((card) => {
+    const rect = card.getBoundingClientRect();
+    const distanceToCenter = Math.sqrt(Math.pow(rect.left + rect.width / 2 - centerX, 2) + Math.pow(rect.top + rect.height / 2 - centerY, 2));
+    const isVisible = rect.top < window.innerHeight && rect.bottom > 0 && rect.left < window.innerWidth && rect.right > 0;
+
+    if (isVisible && (distanceToCenter < 200 || rect.top < centerY + 100 && rect.bottom > centerY - 100)) {
+      if (distanceToCenter < closestDistance) {
+        closestCard = card;
+        closestDistance = distanceToCenter;
+      }
     }
-}
+  });
 
-// Função para mostrar o próximo card
-function showNextCard() {
-    if (currentIndex < cards.length - 1) {
-        cards[currentIndex].classList.remove("active");
-        currentIndex++;
-        cards[currentIndex].classList.add("active");
+  cards.forEach((card) => {
+    if (card === closestCard) {
+      card.classList.add('hover');
+    } else {
+      card.classList.remove('hover');
     }
+  });
 }
 
-// Inicializa o primeiro card como ativo
-cards[currentIndex].classList.add("active");
+window.addEventListener('scroll', checkCenter);
+window.addEventListener('resize', checkCenter);
 
-// Ações dos botões de navegação
-prevBtn.addEventListener("click", showPrevCard);
-nextBtn.addEventListener("click", showNextCard);
 
-// Variáveis para os eventos de swipe
-let startX = 0;
-let endX = 0;
-
-// Função de swipe (movimento de toque)
-function handleTouchStart(event) {
-    startX = event.touches[0].clientX; // Guarda a posição inicial do toque
-}
-
-function handleTouchMove(event) {
-    endX = event.touches[0].clientX; // Atualiza a posição do toque conforme o movimento
-}
-
-function handleTouchEnd() {
-    if (startX > endX) {
-        // Deslizar para a esquerda (próximo card)
-        showNextCard();
-    } else if (startX < endX) {
-        // Deslizar para a direita (card anterior)
-        showPrevCard();
-    }
-}
-
-// Adiciona os listeners de touch para deslizar os cards
-for (let card of cards) {
-    card.addEventListener("touchstart", handleTouchStart);
-    card.addEventListener("touchmove", handleTouchMove);
-    card.addEventListener("touchend", handleTouchEnd);
-}
