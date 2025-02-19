@@ -77,3 +77,5 @@ window.addEventListener('scroll', checkCenter);
 window.addEventListener('resize', checkCenter);
 
 
+
+
