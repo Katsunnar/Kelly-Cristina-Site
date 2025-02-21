@@ -25,8 +25,3 @@ O site foi desenvolvido com foco em **estrutura robusta** e **otimização**. A 
 
 A criação de uma plataforma ágil e eficiente que seja útil para os clientes e facilite o trabalho da advogada.
 
-## **Como Rodar o Projeto Localmente**
-
-1. Clone este repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/seu-repositorio.git
