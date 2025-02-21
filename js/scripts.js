@@ -1,15 +1,3 @@
-window.onbeforeunload = function() {
-  if (window.location.pathname !== "/index.html") {
-    window.location.href = "/index.html";
-  } 
-}
-
-window.onload = function () {
-  if (window.location.pathname !== "/index.html" && window.performance.navigation.type === 1) {
-    window.location.href = "/index.html";
-  }
-}
-
 const cards = document.querySelectorAll('.hover-card, .produto-card');
 
 function checkCenter() {
